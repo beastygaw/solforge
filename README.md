@@ -1,4 +1,4 @@
-# ⚔️ NFT Arena — Solana NFT Card Game
+# ⚔️ SolForge — Solana NFT Card Game
 
 > Built for Colosseum Hackathon 2026
 
@@ -6,7 +6,7 @@
 👉 **https://beastygaw.github.io/nft-arena-web/**
 
 ## 📖 About
-NFT Arena is an on-chain NFT trading card game built on Solana. Players can mint unique NFT cards with on-chain stats, build their collection, and battle other players — all powered by Solana's blazing fast blockchain.
+SolForge is a fully on-chain NFT trading card game built on Solana. Players can mint unique NFT cards with on-chain stats, build their collection, and battle other players — all powered by Solana's blazing fast blockchain.
 
 ## ✨ Features
 - 🎴 **Mint NFT Cards** — Each card is a unique NFT on Solana devnet with on-chain stats (Attack, Defense, Rarity)
