@@ -142,6 +142,25 @@ nav {
 .page.active { display: block; }
 
 /* HOME PAGE */
+
+.hero-img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  z-index: 2;
+  position: relative;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+}
+
+.hero-label {
+  font-size: 10px;
+  margin-top: 6px;
+  opacity: 0.7;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
 .hero {
   min-height: 90vh;
   display: flex;
@@ -1138,13 +1157,34 @@ nav {
     </h1>
     <p>Mint powerful NFT cards with on-chain stats, build your collection, and battle challengers in the ultimate Solana card game.</p>
 
-    <div class="hero-cards">
-      <div class="hero-card-mini" style="background:linear-gradient(135deg,#3b0000,#7f1d1d)" onclick="showPage('mint')">🐉<div style="font-size:10px;margin-top:4px;opacity:0.7;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px">DRAGON</div></div>
-      <div class="hero-card-mini" style="background:linear-gradient(135deg,#0c1f3d,#1e3a8a)" onclick="showPage('mint')">🦅<div style="font-size:10px;margin-top:4px;opacity:0.7;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px">PHOENIX</div></div>
-      <div class="hero-card-mini" style="background:linear-gradient(135deg,#1a0a2e,#4c1d95)" onclick="showPage('mint')">🐺<div style="font-size:10px;margin-top:4px;opacity:0.7;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px">WOLF</div></div>
-      <div class="hero-card-mini" style="background:linear-gradient(135deg,#2d1a00,#78350f)" onclick="showPage('mint')">⚡<div style="font-size:10px;margin-top:4px;opacity:0.7;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px">EAGLE</div></div>
-      <div class="hero-card-mini" style="background:linear-gradient(135deg,#0a1f0a,#14532d)" onclick="showPage('mint')">🪨<div style="font-size:10px;margin-top:4px;opacity:0.7;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px">GOLEM</div></div>
-    </div>
+   <div class="hero-cards">
+
+  <div class="hero-card-mini" style="background:linear-gradient(135deg,#3b0000,#7f1d1d)" onclick="showPage('mint')">
+    <img src="images/DragonWarrior.png" class="hero-img" />
+    <div class="hero-label">Dragon Warrior</div>
+  </div>
+
+  <div class="hero-card-mini" style="background:linear-gradient(135deg,#0c1f3d,#1e3a8a)" onclick="showPage('mint')">
+    <img src="images/IcePhoenix.png" class="hero-img" />
+    <div class="hero-label">Ice Phoenix</div>
+  </div>
+
+  <div class="hero-card-mini" style="background:linear-gradient(135deg,#1a0a2e,#4c1d95)" onclick="showPage('mint')">
+    <img src="images/ShadowWolf.png" class="hero-img" />
+    <div class="hero-label">Shadow Wolf</div>
+  </div>
+
+  <div class="hero-card-mini" style="background:linear-gradient(135deg,#2d1a00,#78350f)" onclick="showPage('mint')">
+    <img src="images/StormEagle.png" class="hero-img" />
+    <div class="hero-label">Storm Eagle</div>
+  </div>
+
+  <div class="hero-card-mini" style="background:linear-gradient(135deg,#0a1f0a,#14532d)" onclick="showPage('mint')">
+    <img src="images/EarthGolem.png" class="hero-img" />
+    <div class="hero-label">Earth Golem</div>
+  </div>
+
+</div>
 
     <div class="hero-btns">
       <button class="btn-gold" onclick="showPage('mint')">🎴 Mint Cards</button>
