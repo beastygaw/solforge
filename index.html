@@ -163,11 +163,24 @@ async function connectWallet() {
     const btn = document.getElementById('walletBtn')
     btn.textContent = walletAddress.slice(0,4) + '...' + walletAddress.slice(-4)
     btn.style.background = '#059669'
+    btn.onclick = disconnectWallet
     renderCards()
     showAlert('mintAlert', '✅ Wallet connected: ' + walletAddress.slice(0,8) + '...', 'success')
   } catch (err) {
     showAlert('mintAlert', '❌ ' + err.message, 'error')
+  } async function disconnectWallet() {
+  try {
+    await window.solana.disconnect()
+    walletAddress = null
+    const btn = document.getElementById('walletBtn')
+    btn.textContent = 'Connect Wallet'
+    btn.style.background = '#7c3aed'
+    btn.onclick = connectWallet
+    renderCards()
+  } catch(err) {
+    console.log(err)
   }
+}
 }
 
 function showAlert(id, msg, type) {
