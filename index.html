@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NFT Arena - Solana Card Game</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a0a; color: #fff; font-family: 'Segoe UI', sans-serif; }
+nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 32px; border-bottom: 1px solid #4a1d96; }
+nav h1 { color: #a855f7; font-size: 24px; }
+nav div { display: flex; gap: 24px; align-items: center; }
+nav button { background: #7c3aed; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+nav a { color: #fff; text-decoration: none; cursor: pointer; }
+nav a:hover { color: #a855f7; }
+.page { display: none; max-width: 1200px; margin: 0 auto; padding: 48px 32px; }
+.page.active { display: block; }
+.hero { text-align: center; padding: 80px 32px; }
+.hero h2 { font-size: 56px; font-weight: bold; margin-bottom: 16px; }
+.hero h2 span { color: #a855f7; }
+.hero p { font-size: 20px; color: #9ca3af; margin-bottom: 32px; }
+.hero-btns { display: flex; gap: 16px; justify-content: center; margin-bottom: 64px; }
+.btn-primary { background: #7c3aed; color: #fff; border: none; padding: 14px 36px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
+.btn-outline { background: transparent; color: #fff; border: 2px solid #7c3aed; padding: 14px 36px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
+.stats { display: flex; gap: 64px; justify-content: center; }
+.stat p:first-child { font-size: 36px; font-weight: bold; }
+.stat p:last-child { color: #9ca3af; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+.card { border-radius: 12px; padding: 24px; border: 1px solid #4a1d96; text-align: center; }
+.card .emoji { font-size: 64px; margin-bottom: 16px; }
+.card h3 { font-size: 20px; font-weight: bold; margin-bottom: 8px; }
+.card .rarity { font-size: 14px; color: #d1d5db; margin-bottom: 16px; }
+.card .stats-row { display: flex; justify-content: space-around; margin-bottom: 16px; }
+.card .stat-val { font-weight: bold; font-size: 20px; }
+.card .stat-lbl { font-size: 12px; color: #9ca3af; }
+.atk { color: #f87171; }
+.def { color: #60a5fa; }
+.mint-btn { width: 100%; background: #7c3aed; color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
+.mint-btn:disabled { background: #374151; cursor: not-allowed; }
+.alert { padding: 16px; border-radius: 8px; margin-bottom: 24px; }
+.alert-success { background: #14532d; border: 1px solid #16a34a; }
+.alert-error { background: #7f1d1d; border: 1px solid #dc2626; }
+.alert-info { background: #1e3a5f; border: 1px solid #2563eb; padding: 24px; text-align: center; }
+.collection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+.ccard { background: #111827; border: 1px solid #4a1d96; border-radius: 12px; padding: 24px; text-align: center; }
+.battle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.battle-card { padding: 16px; border-radius: 8px; border: 1px solid #374151; background: #111827; display: flex; align-items: center; gap: 12px; cursor: pointer; margin-bottom: 12px; }
+.battle-card.selected { border: 2px solid #a855f7; background: #4a1d96; }
+.opp-card { padding: 16px; border-radius: 8px; border: 1px solid #374151; background: #111827; display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.fight-btn { background: #dc2626; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-left: auto; }
+.fight-btn:disabled { background: #374151; cursor: not-allowed; }
+.result-banner { background: #14532d; border: 1px solid #16a34a; border-radius: 8px; padding: 20px; text-align: center; font-size: 22px; font-weight: bold; margin-bottom: 24px; }
+h2.page-title { font-size: 36px; font-weight: bold; margin-bottom: 8px; }
+p.page-sub { color: #9ca3af; margin-bottom: 32px; }
+.section-title { font-size: 20px; font-weight: bold; margin-bottom: 16px; }
+.purple { color: #a855f7; }
+.red { color: #ef4444; }
+.wallet-info { background: #111827; border: 1px solid #4a1d96; border-radius: 8px; padding: 8px 16px; font-size: 13px; color: #a855f7; }
+</style>
+</head>
+<body>
+
+<nav>
+  <h1>⚔️ NFT Arena</h1>
+  <div>
+    <a onclick="showPage('home')">Home</a>
+    <a onclick="showPage('mint')">Mint</a>
+    <a onclick="showPage('collection')">Collection</a>
+    <a onclick="showPage('battle')">Battle</a>
+    <button id="walletBtn" onclick="connectWallet()">Connect Wallet</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="home" class="page active">
+  <div class="hero">
+    <h2>Forge Your <span>Legend</span></h2>
+    <p>Mint NFT cards on Solana, build your deck, and battle players worldwide.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('mint')">🎴 Mint Cards</button>
+      <button class="btn-outline" onclick="showPage('battle')">⚔️ Battle Now</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><p style="color:#a855f7">10K+</p><p>Cards Minted</p></div>
+      <div class="stat"><p style="color:#10b981">50K+</p><p>Battles Fought</p></div>
+      <div class="stat"><p style="color:#3b82f6">5K+</p><p>Players</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- MINT -->
+<div id="mint" class="page">
+  <h2 class="page-title">🎴 Mint Your Cards</h2>
+  <p class="page-sub">Choose a card to mint as NFT on Solana devnet</p>
+  <div id="mintAlert"></div>
+  <div class="cards-grid" id="cardsGrid"></div>
+</div>
+
+<!-- COLLECTION -->
+<div id="collection" class="page">
+  <h2 class="page-title">🃏 My Collection</h2>
+  <p class="page-sub">Your minted NFT cards on Solana devnet</p>
+  <div id="collectionGrid"></div>
+</div>
+
+<!-- BATTLE -->
+<div id="battle" class="page">
+  <h2 class="page-title">⚔️ Battle Arena</h2>
+  <p class="page-sub">Select your card and challenge an opponent</p>
+  <div id="battleResult"></div>
+  <div class="battle-grid">
+    <div>
+      <p class="section-title purple">Your Cards</p>
+      <div id="myBattleCards"></div>
+    </div>
+    <div>
+      <p class="section-title red">Opponents</p>
+      <div id="opponents"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+<script>
+const CARDS = [
+  { name:'Dragon Warrior', attack:85, defense:60, rarity:3, emoji:'🐉', bg:'#3b0000' },
+  { name:'Ice Phoenix', attack:70, defense:90, rarity:2, emoji:'🦅', bg:'#0c1f3d' },
+  { name:'Shadow Wolf', attack:95, defense:45, rarity:3, emoji:'🐺', bg:'#1a0a2e' },
+  { name:'Storm Eagle', attack:75, defense:75, rarity:2, emoji:'⚡', bg:'#2d1a00' },
+  { name:'Earth Golem', attack:50, defense:99, rarity:1, emoji:'🪨', bg:'#0a1f0a' },
+  { name:'Fire Sprite', attack:88, defense:40, rarity:2, emoji:'🔥', bg:'#3b0a0a' },
+]
+
+const OPPONENTS = [
+  { name:'Dark Knight', attack:80, defense:70, emoji:'🗡️' },
+  { name:'Sea Serpent', attack:90, defense:55, emoji:'🐍' },
+  { name:'Thunder God', attack:95, defense:65, emoji:'⚡' },
+]
+
+let walletAddress = null
+let selectedCard = null
+let minting = false
+
+const rarityLabel = (r) => r === 3 ? '🟡 Legendary' : r === 2 ? '🔵 Rare' : '⚪ Common'
+
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
+  document.getElementById(page).classList.add('active')
+  if (page === 'collection') renderCollection()
+  if (page === 'battle') renderBattle()
+  if (page === 'mint') renderCards()
+}
+
+async function connectWallet() {
+  try {
+    const { solana } = window
+    if (!solana || !solana.isPhantom) {
+      alert('Please install Phantom wallet from phantom.app')
+      return
+    }
+    const response = await solana.connect()
+    walletAddress = response.publicKey.toString()
+    const btn = document.getElementById('walletBtn')
+    btn.textContent = walletAddress.slice(0,4) + '...' + walletAddress.slice(-4)
+    btn.style.background = '#059669'
+    renderCards()
+    showAlert('mintAlert', '✅ Wallet connected: ' + walletAddress.slice(0,8) + '...', 'success')
+  } catch (err) {
+    showAlert('mintAlert', '❌ ' + err.message, 'error')
+  }
+}
+
+function showAlert(id, msg, type) {
+  const el = document.getElementById(id)
+  if (el) {
+    el.innerHTML = '<div class="alert alert-' + type + '">' + msg + '</div>'
+    setTimeout(() => { if(el) el.innerHTML = '' }, 5000)
+  }
+}
+
+async function mintCard(card) {
+  if (!walletAddress) {
+    showAlert('mintAlert', '❌ Please connect your wallet first!', 'error')
+    return
+  }
+  if (minting) return
+  minting = true
+  renderCards()
+  showAlert('mintAlert', '⏳ Minting ' + card.name + '...', 'info')
+
+  try {
+    const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('devnet'), 'confirmed')
+    const { solana } = window
+    const provider = solana
+
+    // Create mint transaction simulation
+    const fromPubkey = new solanaWeb3.PublicKey(walletAddress)
+    
+    // Small transfer to self as proof of mint (0.000001 SOL)
+    const transaction = new solanaWeb3.Transaction().add(
+      solanaWeb3.SystemProgram.transfer({
+        fromPubkey,
+        toPubkey: fromPubkey,
+        lamports: 1000,
+      })
+    )
+
+    const { blockhash } = await connection.getLatestBlockhash()
+    transaction.recentBlockhash = blockhash
+    transaction.feePayer = fromPubkey
+
+    const signed = await provider.signTransaction(transaction)
+    const txid = await connection.sendRawTransaction(signed.serialize())
+    await connection.confirmTransaction(txid)
+
+    // Save card
+    const existing = JSON.parse(localStorage.getItem('myCards') || '[]')
+    const alreadyMinted = existing.find(c => c.name === card.name)
+    if (alreadyMinted) {
+      showAlert('mintAlert', '⚠️ You already minted ' + card.name + '!', 'error')
+      minting = false
+      renderCards()
+      return
+    }
+    existing.push({ ...card, tx: txid, mintedAt: new Date().toISOString() })
+    localStorage.setItem('myCards', JSON.stringify(existing))
+    showAlert('mintAlert', '✅ ' + card.emoji + ' ' + card.name + ' minted! TX: ' + txid.slice(0,16) + '...', 'success')
+  } catch (err) {
+    showAlert('mintAlert', '❌ ' + (err.message || 'Minting failed'), 'error')
+  }
+  minting = false
+  renderCards()
+}
+
+function renderCards() {
+  const grid = document.getElementById('cardsGrid')
+  if (!grid) return
+  grid.innerHTML = CARDS.map(card => `
+    <div class="card" style="background:${card.bg}">
+      <div class="emoji">${card.emoji}</div>
+      <h3>${card.name}</h3>
+      <p class="rarity">${rarityLabel(card.rarity)}</p>
+      <div class="stats-row">
+        <div><p class="stat-val atk">${card.attack}</p><p class="stat-lbl">ATK</p></div>
+        <div><p class="stat-val def">${card.defense}</p><p class="stat-lbl">DEF</p></div>
+      </div>
+      <button class="mint-btn" onclick="mintCard(${JSON.stringify(card).replace(/"/g,'&quot;')})" ${!walletAddress || minting ? 'disabled' : ''}>
+        ${minting ? '⏳ Minting...' : '✨ Mint Card'}
+      </button>
+    </div>
+  `).join('')
+}
+
+function renderCollection() {
+  const grid = document.getElementById('collectionGrid')
+  const cards = JSON.parse(localStorage.getItem('myCards') || '[]')
+  if (!walletAddress) {
+    grid.innerHTML = '<div class="alert alert-info"><p style="margin-bottom:16px">Connect your wallet to view your collection</p><button class="btn-primary" onclick="connectWallet()">Connect Wallet</button></div>'
+    return
+  }
+  if (cards.length === 0) {
+    grid.innerHTML = '<div style="text-align:center;padding:80px 0"><p style="font-size:20px;color:#9ca3af;margin-bottom:24px">No cards yet! Go mint some.</p><button class="btn-primary" onclick="showPage(\'mint\')">Mint Your First Card</button></div>'
+    return
+  }
+  grid.innerHTML = '<div class="collection-grid">' + cards.map(card => `
+    <div class="ccard">
+      <div style="font-size:48px;margin-bottom:12px">${card.emoji}</div>
+      <h3 style="font-size:20px;font-weight:bold;margin-bottom:4px">${card.name}</h3>
+      <p style="font-size:14px;color:#d1d5db;margin-bottom:12px">${rarityLabel(card.rarity)}</p>
+      <div style="display:flex;justify-content:space-around;margin-bottom:12px">
+        <div><p class="stat-val atk">${card.attack}</p><p class="stat-lbl">ATK</p></div>
+        <div><p class="stat-val def">${card.defense}</p><p class="stat-lbl">DEF</p></div>
+      </div>
+      <button onclick="window.open('https://explorer.solana.com/tx/${card.tx}?cluster=devnet','_blank')" style="background:transparent;color:#a855f7;border:none;cursor:pointer;font-size:12px">
+        View on Explorer ↗
+      </button>
+    </div>
+  `).join('') + '</div>'
+}
+
+function renderBattle() {
+  const myCards = JSON.parse(localStorage.getItem('myCards') || '[]')
+  const myDiv = document.getElementById('myBattleCards')
+  const oppDiv = document.getElementById('opponents')
+
+  if (myCards.length === 0) {
+    myDiv.innerHTML = '<div style="text-align:center;padding:40px;border:1px solid #4a1d96;border-radius:8px"><p style="color:#9ca3af;margin-bottom:16px">No cards! Mint some first.</p><button class="btn-primary" onclick="showPage(\'mint\')">Mint Cards</button></div>'
+  } else {
+    myDiv.innerHTML = myCards.map((card, i) => `
+      <div class="battle-card ${selectedCard && selectedCard.name === card.name ? 'selected' : ''}" onclick="selectCard(${i})">
+        <span style="font-size:32px">${card.emoji}</span>
+        <div style="flex:1">
+          <p style="font-weight:bold">${card.name}</p>
+          <p style="font-size:14px;color:#9ca3af">ATK ${card.attack} | DEF ${card.defense}</p>
+        </div>
+        ${selectedCard && selectedCard.name === card.name ? '<span style="color:#a855f7;font-weight:bold">✓</span>' : ''}
+      </div>
+    `).join('')
+  }
+
+  oppDiv.innerHTML = OPPONENTS.map((opp, i) => `
+    <div class="opp-card">
+      <span style="font-size:32px">${opp.emoji}</span>
+      <div style="flex:1">
+        <p style="font-weight:bold">${opp.name}</p>
+        <p style="font-size:14px;color:#9ca3af">ATK ${opp.attack} | DEF ${opp.defense}</p>
+      </div>
+      <button class="fight-btn" onclick="doBattle(${i})" ${!selectedCard ? 'disabled' : ''}>Fight!</button>
+    </div>
+  `).join('')
+}
+
+function selectCard(i) {
+  const myCards = JSON.parse(localStorage.getItem('myCards') || '[]')
+  selectedCard = myCards[i]
+  renderBattle()
+}
+
+async function doBattle(oppIndex) {
+  if (!selectedCard) return
+  const opp = OPPONENTS[oppIndex]
+  const playerPower = selectedCard.attack + selectedCard.defense
+  const oppPower = opp.attack + opp.defense
+  const winner = playerPower >= oppPower ? selectedCard.name : opp.name
+
+  document.getElementById('battleResult').innerHTML = `
+    <div class="result-banner">
+      🏆 ${winner} wins the battle!<br>
+      <span style="font-size:16px;color:#d1d5db">${selectedCard.name} (${playerPower}) vs ${opp.name} (${oppPower})</span>
+    </div>
+  `
+}
+
+// Init
+renderCards()
+</script>
+</body>
+</html>
