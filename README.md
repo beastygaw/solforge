@@ -48,9 +48,9 @@ SolForge is a fully on-chain NFT trading card game built on Solana. Players can 
 ## 🎴 Card Rarities
 | Rarity | Cards |
 |---|---|
-| 🟡 Legendary | Dragon Warrior, Shadow Wolf |
-| 🔵 Rare | Ice Phoenix, Storm Eagle, Fire Sprite |
-| ⚪ Common | Earth Golem |
+| 🟡 Legendary | Dragon Sovereign, Shadow Reaper |
+| 🔵 Rare | Frost Phoenix, Storm Titan, Ember Witch |
+| ⚪ Common | Stone Guardian |
 
 ## 🏗️ Local Development
 ```bash
