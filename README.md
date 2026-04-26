@@ -23,7 +23,6 @@ SolaraForge is a fully on-chain NFT trading card game built on Solana. Players c
 | NFT Standard | SPL Token |
 | Frontend | HTML5 + JavaScript |
 | Wallet | Phantom Wallet Adapter |
-| Hosting | GitHub Pages |
 
 ## 🚀 How It Works
 1. Connect your Phantom wallet (set to Devnet)
